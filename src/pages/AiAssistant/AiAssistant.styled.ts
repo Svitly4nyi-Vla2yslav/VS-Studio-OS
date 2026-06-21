@@ -31,6 +31,12 @@ export const AnalyzeButton = styled.button`
   color: #11131a;
   background: #f7d590;
   font-weight: 800;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.58;
+  }
 `;
 
 // ExampleList показує приклади майбутніх AI-інструкцій.
@@ -50,5 +56,7 @@ export const ResultBlock = styled.pre`
   padding: 16px;
   color: #f6f1e8;
   background: rgba(7, 10, 18, 0.84);
-  line-height: 1.6;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.75;
 `;

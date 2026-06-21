@@ -1,5 +1,32 @@
 import { AiRecommendation } from './types';
 
+const cleanAssistantText = (text: string) =>
+  text
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/__(.*?)__/g, '$1')
+    .trim();
+
+export const requestAiAssistant = async (instruction: string) => {
+  const response = await fetch('/api/ai-assistant', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ instruction }),
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(data?.error || 'AI Assistant request failed.');
+  }
+
+  return {
+    answer: cleanAssistantText(String(data?.answer || '')),
+    model: String(data?.model || ''),
+  };
+};
+
 // getLeadById є контрольованою AI-дією для отримання ліда через сервісний шар у майбутньому.
 // Функція приймає id ліда і зараз повертає лише опис запланованої операції.
 export const getLeadById = (id: string) => ({
