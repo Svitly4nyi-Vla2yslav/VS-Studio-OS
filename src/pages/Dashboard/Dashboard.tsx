@@ -17,6 +17,7 @@ const dashboardCards = [
   },
 ];
 
+
 // Сторінка Dashboard показує короткий огляд першого MVP VS Studio OS.
 export const Dashboard = () => (
   <>
