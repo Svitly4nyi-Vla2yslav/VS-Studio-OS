@@ -1,7 +1,14 @@
 import { ClientMessage } from './types';
 
-// createEmailDraft готує чернетку email для майбутньої інтеграції з Web.de.
-// Функція приймає тему, отримувача і текст, але зараз не надсилає реальні листи.
+/**
+ * Формує локальну email-чернетку без фактичного надсилання через Web.de.
+ *
+ * @param to — адреса отримувача.
+ * @param subject — тема листа.
+ * @param body — текст повідомлення.
+ * @returns Об'єкт чернетки зі статусом draft.
+ * @sideEffects Не виконує мережевих запитів і не надсилає лист.
+ */
 export const createEmailDraft = (to: string, subject: string, body: string) => ({
   from: 'VS Studio Anfrage <vs.studio.anfrage@web.de>',
   to,
@@ -10,8 +17,12 @@ export const createEmailDraft = (to: string, subject: string, body: string) => (
   status: 'draft',
 });
 
-// saveManualEmailNote готує ручний запис про email-комунікацію.
-// Функція приймає текст нотатки і повертає повідомлення, яке можна зберегти через clientService.
+/**
+ * Перетворює текст ручної нотатки на повідомлення клієнта в каналі email.
+ *
+ * @param text — зміст нотатки про комунікацію.
+ * @returns Повідомлення без id і createdAt, які додає шар збереження.
+ */
 export const saveManualEmailNote = (text: string): Omit<ClientMessage, 'id' | 'createdAt'> => ({
   channel: 'email',
   text,
