@@ -15,8 +15,12 @@ import { ClientTask } from './types';
 // tasksCollection є єдиним посиланням на колекцію задач у Firestore.
 const tasksCollection = collection(db, 'tasks');
 
-// getTasks отримує всі задачі з Firestore.
-// Функція не приймає параметрів і повертає масив ClientTask.
+/**
+ * Отримує всі задачі з Firestore у порядку від найновіших.
+ *
+ * @returns Масив задач із id документа.
+ * @sideEffects Виконує читання колекції tasks у Firestore.
+ */
 export const getTasks = async (): Promise<ClientTask[]> => {
   const tasksQuery = query(tasksCollection, orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(tasksQuery);
@@ -27,8 +31,13 @@ export const getTasks = async (): Promise<ClientTask[]> => {
   }));
 };
 
-// createTask створює нову задачу.
-// Функція приймає дані задачі без id і дат, додає timestamps та повертає id документа.
+/**
+ * Створює задачу й додає однакові createdAt та updatedAt.
+ *
+ * @param data — поля задачі без id і часових міток.
+ * @returns Ідентифікатор створеного документа.
+ * @sideEffects Записує новий документ у колекцію tasks.
+ */
 export const createTask = async (
   data: Omit<ClientTask, 'id' | 'createdAt' | 'updatedAt'>,
 ): Promise<string> => {
@@ -42,8 +51,14 @@ export const createTask = async (
   return docRef.id;
 };
 
-// updateTask оновлює існуючу задачу.
-// Функція приймає id задачі та часткові поля ClientTask, повертає Promise після запису.
+/**
+ * Оновлює вибрані поля задачі та встановлює новий updatedAt.
+ *
+ * @param id — ідентифікатор документа задачі.
+ * @param data — частковий набір полів без id і createdAt.
+ * @returns Promise, який завершується після запису.
+ * @sideEffects Оновлює документ tasks/{id} у Firestore.
+ */
 export const updateTask = async (
   id: string,
   data: Partial<Omit<ClientTask, 'id' | 'createdAt'>>,
@@ -55,15 +70,25 @@ export const updateTask = async (
   });
 };
 
-// deleteTask видаляє задачу з Firestore.
-// Функція приймає id задачі і повертає Promise після видалення.
+/**
+ * Видаляє задачу з Firestore.
+ *
+ * @param id — ідентифікатор документа задачі.
+ * @returns Promise, який завершується після видалення.
+ * @sideEffects Видаляє документ tasks/{id}.
+ */
 export const deleteTask = async (id: string): Promise<void> => {
   const taskRef = doc(db, 'tasks', id);
   await deleteDoc(taskRef);
 };
 
-// getTasksByClientId отримує задачі, прив'язані до конкретного клієнта.
-// Функція приймає clientId і повертає масив ClientTask.
+/**
+ * Отримує задачі, пов'язані з конкретним клієнтом.
+ *
+ * @param clientId — ідентифікатор клієнта для Firestore-фільтра.
+ * @returns Масив знайдених задач із id документа.
+ * @sideEffects Виконує фільтрований запит до колекції tasks.
+ */
 export const getTasksByClientId = async (clientId: string): Promise<ClientTask[]> => {
   const tasksQuery = query(tasksCollection, where('clientId', '==', clientId));
   const snapshot = await getDocs(tasksQuery);
