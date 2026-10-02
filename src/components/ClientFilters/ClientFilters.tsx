@@ -10,7 +10,11 @@ interface ClientFiltersProps {
   onSourceChange: (value: LeadSource | 'all') => void;
 }
 
-// Компонент ClientFilters відповідає за пошук і фільтрацію CRM-списку.
+/**
+ * Рендерить контрольовані фільтри CRM за текстом, статусом і джерелом ліда.
+ * Поточні значення надходять через props, а кожна зміна передається відповідному
+ * callback; сам компонент не фільтрує масив клієнтів і не зберігає локальний стан.
+ */
 export const ClientFilters = ({
   search,
   status,
