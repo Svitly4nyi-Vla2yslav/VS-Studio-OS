@@ -1,11 +1,20 @@
 import { AiRecommendation } from './types';
 
+/**
+ * Прибирає прості Markdown-маркери жирного тексту та зовнішні пробіли.
+ * Приймає відповідь асистента й повертає очищений рядок без зміни іншої розмітки.
+ */
 const cleanAssistantText = (text: string) =>
   text
     .replace(/\*\*(.*?)\*\*/g, '$1')
     .replace(/__(.*?)__/g, '$1')
     .trim();
 
+/**
+ * Надсилає інструкцію на внутрішній POST endpoint AI-асистента.
+ * Повертає очищену відповідь і назву моделі; за неуспішного HTTP-статусу кидає
+ * повідомлення API або резервну помилку, навіть якщо тіло відповіді не є JSON.
+ */
 export const requestAiAssistant = async (instruction: string) => {
   const response = await fetch('/api/ai-assistant', {
     method: 'POST',
