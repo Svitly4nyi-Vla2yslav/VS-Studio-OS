@@ -15,10 +15,10 @@ interface ClientCardProps {
   client: Client;
 }
 
-// Компонент ClientCard відповідає за коротке відображення одного клієнта у списку CRM.
-// Тут показується ім'я, компанія, статус, джерело ліда, контакти та наступна дія.
+// Компонент приймає повний запис Client і повертає стислу картку для списку CRM.
+// Картка показує основні контакти та веде на маршрут деталей, сформований з client.id.
 export const ClientCard = ({ client }: ClientCardProps) => {
-  // nextActionText зберігає текст наступної дії або безпечний fallback.
+  // Порожнє значення nextAction замінюється читабельним fallback лише для відображення; запис клієнта не змінюється.
   const nextActionText = client.nextAction || 'Next action is not set yet';
 
   return (
