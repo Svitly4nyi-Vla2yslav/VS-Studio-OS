@@ -6,7 +6,8 @@ interface TaskCardProps {
   clientName?: string;
 }
 
-// Компонент TaskCard відповідає за коротке відображення задачі у task-модулі.
+// Компонент приймає задачу та необов’язкове ім’я пов’язаного клієнта й повертає стислу картку.
+// Опис рендериться лише за наявності, а відсутні строк виконання чи клієнт отримують текстові fallback-значення.
 export const TaskCard = ({ task, clientName }: TaskCardProps) => (
   <TaskArticle>
     <TaskHeader>
