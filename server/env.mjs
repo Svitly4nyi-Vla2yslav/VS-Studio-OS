@@ -1,6 +1,8 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+// loadEnv читає вказаний відносний env-файл із поточної робочої теки та додає лише ще не визначені змінні process.env.
+// Функція нічого не повертає, ігнорує порожні рядки/коментарі/рядки без «=» та не перезаписує оточення процесу.
 export const loadEnv = (file = '.env') => {
   const envPath = resolve(process.cwd(), file);
 
