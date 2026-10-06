@@ -9,6 +9,7 @@ const systemPrompt = [
   'When an action is needed, describe the proposed action and any missing data.',
 ].join(' ');
 
+// cleanPlainText приймає текст моделі й повертає очищений plain text без маркерів bold і меж code fence.
 const cleanPlainText = (text) =>
   text
     .replace(/\*\*(.*?)\*\*/g, '$1')
@@ -16,6 +17,7 @@ const cleanPlainText = (text) =>
     .replace(/```[\s\S]*?```/g, (match) => match.replace(/```/g, '').trim())
     .trim();
 
+// readResponseText витягує відповідь із output_text або збирає текстові chunks із Responses API; порожній результат лишається порожнім.
 const readResponseText = (data) => {
   if (typeof data?.output_text === 'string' && data.output_text.trim()) {
     return cleanPlainText(data.output_text);
@@ -34,6 +36,8 @@ const readResponseText = (data) => {
   return cleanPlainText(chunks.join('\n'));
 };
 
+// createAiAssistantReply приймає інструкцію користувача, перевіряє конфігурацію та виконує один HTTP-запит до Responses API.
+// Повертає очищені answer/model; для невалідного вводу, API-помилки чи порожньої відповіді кидає Error зі statusCode.
 export const createAiAssistantReply = async (instruction) => {
   const apiKey = process.env.OPENAI_API_KEY;
   const model = process.env.OPENAI_MODEL || 'gpt-5.5';
