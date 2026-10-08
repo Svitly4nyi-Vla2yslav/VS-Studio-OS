@@ -1,5 +1,9 @@
 import { createAiAssistantReply } from '../../server/openaiClient.mjs';
 
+/**
+ * Обробляє Netlify-запит до AI-помічника.
+ * Приймає лише POST, передає instruction спільному сервісу та повертає JSON зі статусом сервісу.
+ */
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return {
@@ -9,6 +13,7 @@ export const handler = async (event) => {
   }
 
   try {
+    // Порожнє тіло трактується як об'єкт; помилки JSON і сервісу потрапляють у спільну гілку відповіді.
     const body = JSON.parse(event.body || '{}');
     const result = await createAiAssistantReply(body.instruction);
 
