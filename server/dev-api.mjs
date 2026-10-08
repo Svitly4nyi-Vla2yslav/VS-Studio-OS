@@ -6,6 +6,10 @@ loadEnv();
 
 const port = Number(process.env.API_PORT || 8787);
 
+/**
+ * Завершує локальну HTTP-відповідь JSON-даними та додає CORS-заголовки для Vite.
+ * Приймає об'єкт ServerResponse, статус і серіалізоване корисне навантаження.
+ */
 const sendJson = (response, statusCode, payload) => {
   response.writeHead(statusCode, {
     'Content-Type': 'application/json',
@@ -16,6 +20,10 @@ const sendJson = (response, statusCode, payload) => {
   response.end(JSON.stringify(payload));
 };
 
+/**
+ * Збирає всі частини тіла запиту й повертає розібраний JSON.
+ * Порожнє тіло перетворюється на порожній об'єкт, а помилка синтаксису передається обробнику.
+ */
 const readJsonBody = async (request) => {
   const chunks = [];
 
@@ -30,6 +38,7 @@ const readJsonBody = async (request) => {
   return JSON.parse(Buffer.concat(chunks).toString('utf8'));
 };
 
+// Обробник підтримує preflight і локальний POST /api/ai-assistant; решта маршрутів отримує 404.
 const server = createServer(async (request, response) => {
   if (request.method === 'OPTIONS') {
     sendJson(response, 204, {});
@@ -52,6 +61,7 @@ const server = createServer(async (request, response) => {
   sendJson(response, 404, { error: 'Not found.' });
 });
 
+// Запуск прослуховування є побічним ефектом імпорту цього серверного модуля.
 server.listen(port, () => {
   console.log(`AI API server running at http://localhost:${port}`);
 });
