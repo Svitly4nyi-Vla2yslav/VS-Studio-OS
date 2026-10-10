@@ -19,7 +19,11 @@ interface ClientFormProps {
   onCancel: () => void;
 }
 
-// createInitialState готує стартові значення форми для нового або існуючого клієнта.
+/**
+ * Перетворює необов’язкову CRM-картку на повний стан форми.
+ * Для нового клієнта підставляє порожні поля, джерело Instagram і статус `new lead`,
+ * а під час редагування зберігає наявні нотатки та повідомлення.
+ */
 const createInitialState = (client?: Client): ClientFormData => ({
   name: client?.name || '',
   company: client?.company || '',
@@ -36,17 +40,20 @@ const createInitialState = (client?: Client): ClientFormData => ({
   nextAction: client?.nextAction || '',
 });
 
-// Компонент ClientForm відповідає за створення і редагування CRM-картки клієнта.
+/**
+ * Рендерить контрольовану форму створення або редагування клієнта.
+ * `onSubmit` отримує дані без службових id/міток часу, а `onCancel` лишається відповідальністю батьківського екрана.
+ */
 export const ClientForm = ({ initialClient, submitLabel, onSubmit, onCancel }: ClientFormProps) => {
-  // formData зберігає поточні значення полів, які будуть записані через clientService.
+  // Стан ініціалізується один раз із переданої картки; подальші зміни `initialClient` його не перезаписують.
   const [formData, setFormData] = useState<ClientFormData>(() => createInitialState(initialClient));
 
-  // updateField оновлює одне поле форми без прямої роботи з Firebase.
+  /** Типобезпечно оновлює одне поле, не змінюючи решту значень і не звертаючись до сховища. */
   const updateField = <T extends keyof ClientFormData>(field: T, value: ClientFormData[T]) => {
     setFormData((current) => ({ ...current, [field]: value }));
   };
 
-  // handleSubmit передає зібрані дані сторінці, яка викличе відповідний service.
+  /** Скасовує browser submit і очікує зовнішній `onSubmit`; збереження та обробку помилок виконує викликач. */
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await onSubmit(formData);
