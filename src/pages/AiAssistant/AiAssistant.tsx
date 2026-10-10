@@ -9,6 +9,10 @@ const exampleInstructions = [
   'What should I do next with this lead?',
 ];
 
+/**
+ * Керує простою формою AI-помічника: нормалізує інструкцію,
+ * показує стан очікування та виводить відповідь або безпечне повідомлення про помилку.
+ */
 export const AiAssistant = () => {
   const [instruction, setInstruction] = useState('');
   const [result, setResult] = useState(
@@ -16,6 +20,10 @@ export const AiAssistant = () => {
   );
   const [isLoading, setIsLoading] = useState(false);
 
+/**
+   * Не запускає порожній або повторний запит, передає очищений текст сервісу
+   * й завжди знімає loading у finally. Якщо модель відома, додає її назву до відповіді.
+   */
   const handleAnalyze = async () => {
     const cleanInstruction = instruction.trim();
 
@@ -52,6 +60,7 @@ export const AiAssistant = () => {
           {isLoading ? 'Analyzing...' : 'Analyze'}
         </AnalyzeButton>
         <ExampleList>
+          {/* Приклади статичні й унікальні, тому сам текст придатний як React-ключ. */}
           {exampleInstructions.map((example) => (
             <li key={example}>{example}</li>
           ))}
