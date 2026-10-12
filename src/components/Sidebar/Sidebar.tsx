@@ -1,6 +1,6 @@
 import { BrandBlock, BrandMeta, BrandName, NavItem, NavList, SidebarShell } from './Sidebar.styled';
 
-// navigationItems зберігає головні маршрути внутрішньої системи.
+// Єдиний список задає підписи й маршрути модулів; кореневий Dashboard потребує точного збігу.
 const navigationItems = [
   { label: 'Dashboard', to: '/' },
   { label: 'Clients', to: '/clients' },
@@ -11,7 +11,11 @@ const navigationItems = [
   { label: 'AI Assistant', to: '/ai-assistant' },
 ];
 
-// Компонент Sidebar відповідає за навігацію між бізнес-модулями.
+/**
+ * Рендерить бренд внутрішньої CRM та NavLink для кожного бізнес-модуля.
+ * Маршрути беруться зі сталої конфігурації; `end` для `/` не дозволяє Dashboard
+ * лишатися активним на вкладених сторінках.
+ */
 export const Sidebar = () => (
   <SidebarShell>
     <BrandBlock>
