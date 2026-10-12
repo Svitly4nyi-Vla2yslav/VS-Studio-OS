@@ -7,7 +7,10 @@ interface SectionTitleProps {
   action?: ReactNode;
 }
 
-// Компонент SectionTitle уніфікує заголовки сторінок і ключових секцій.
+/**
+ * Уніфікує заголовок сторінки або секції з необов’язковими описом і action-вузлом.
+ * Порожній `description` не створює зайвої розмітки, а `action` передається без змін праворуч від тексту.
+ */
 export const SectionTitle = ({ title, description, action }: SectionTitleProps) => (
   <SectionHeader>
     <SectionText>
