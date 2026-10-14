@@ -5,10 +5,15 @@ interface EmptyStateProps {
   description: string;
 }
 
-// Компонент EmptyState відповідає за порожні списки клієнтів, задач або документів.
+/**
+ * Показує стандартизований порожній стан для клієнтів, задач або документів.
+ * Приймає готові title і description та повертає лише презентаційну розмітку без стану
+ * й побічних ефектів; локалізацію текстів забезпечує батьківський компонент.
+ */
 export const EmptyState = ({ title, description }: EmptyStateProps) => (
   <EmptyStateBox>
     <EmptyStateTitle>{title}</EmptyStateTitle>
     <EmptyStateDescription>{description}</EmptyStateDescription>
   </EmptyStateBox>
 );
+
