@@ -5,7 +5,12 @@ interface ClientStatusBadgeProps {
   status: LeadStatus;
 }
 
-// Компонент ClientStatusBadge відповідає за видиме маркування етапу роботи з клієнтом.
+/**
+ * Відображає типізований етап роботи з клієнтом як стилізований badge.
+ * status одночасно визначає видимий текст і $status для вибору кольорів;
+ * компонент не змінює дані та не має побічних ефектів.
+ */
 export const ClientStatusBadge = ({ status }: ClientStatusBadgeProps) => (
   <Badge $status={status}>{status}</Badge>
 );
+
