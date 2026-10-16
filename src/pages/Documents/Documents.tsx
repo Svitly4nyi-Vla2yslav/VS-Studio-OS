@@ -1,7 +1,10 @@
 import { SectionTitle } from '../../components/SectionTitle/SectionTitle';
 import { DocumentList, DocumentPanel, DocumentTitle, DocumentsGrid } from './Documents.styled';
 
-// Сторінка Documents готує архів документів і видимий Datenschutz/GDPR план.
+/**
+ * Показує статичний план майбутнього архіву документів і вимог Datenschutz/GDPR.
+ * Компонент не читає файли та не виконує експорт: пункти описують заплановані можливості MVP.
+ */
 export const Documents = () => (
   <>
     <SectionTitle
@@ -30,3 +33,4 @@ export const Documents = () => (
     </DocumentsGrid>
   </>
 );
+
