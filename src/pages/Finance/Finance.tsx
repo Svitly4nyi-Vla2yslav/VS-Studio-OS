@@ -13,7 +13,10 @@ const financeSections = [
   'audit log',
 ];
 
-// Сторінка Finance є структурованою заглушкою для майбутнього фінансового модуля.
+/**
+ * Рендерить структуровану заглушку фінансового модуля з переліку financeSections.
+ * Дані не розраховуються й не зберігаються; податковий текст прямо нагадує про перевірку зі Steuerberater.
+ */
 export const Finance = () => (
   <>
     <SectionTitle
@@ -35,3 +38,4 @@ export const Finance = () => (
     </FinanceGrid>
   </>
 );
+
