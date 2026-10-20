@@ -1,7 +1,10 @@
 import { SectionTitle } from '../../components/SectionTitle/SectionTitle';
 import { CommunicationList, CommunicationPanel } from './Communication.styled';
 
-// Сторінка Communication готує місце для майбутньої Web.de інтеграції без реального надсилання email.
+/**
+ * Показує межі майбутнього модуля комунікацій і запланованої Web.de інтеграції.
+ * Компонент статичний: не читає історію клієнтів, не створює чернеток і не надсилає email.
+ */
 export const Communication = () => (
   <>
     <SectionTitle
