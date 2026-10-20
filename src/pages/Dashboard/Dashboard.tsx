@@ -1,7 +1,7 @@
 import { SectionTitle } from '../../components/SectionTitle/SectionTitle';
 import { DashboardCard, DashboardCardText, DashboardCardTitle, DashboardGrid } from './Dashboard.styled';
 
-// dashboardCards описує перші операційні зони внутрішньої системи.
+// Статичний каталог описує операційні зони першого MVP; масив не завантажується з Firebase.
 const dashboardCards = [
   {
     title: 'CRM clients and leads',
@@ -18,7 +18,10 @@ const dashboardCards = [
 ];
 
 
-// Сторінка Dashboard показує короткий огляд першого MVP VS Studio OS.
+/**
+ * Показує огляд можливостей VS Studio OS із локального dashboardCards.
+ * Компонент не обчислює метрики й не виконує запитів: кожна картка є презентаційним описом модуля.
+ */
 export const Dashboard = () => (
   <>
     <SectionTitle
