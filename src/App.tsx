@@ -10,7 +10,11 @@ import { Finance } from './pages/Finance/Finance';
 import { Tasks } from './pages/Tasks/Tasks';
 import { NotFoundPanel, NotFoundText, NotFoundTitle } from './App.styled';
 
-// Компонент App відповідає за маршрути VS Studio OS та підключення основного Layout.
+/**
+ * Описує дерево маршрутів VS Studio OS усередині спільного `Layout`.
+ * Динамічний `:clientId` відкриває конкретного клієнта, `/dashboard` перенаправляє
+ * на корінь із replace, а невідомі адреси отримують локальну not-found панель.
+ */
 export const App = () => (
   <Routes>
     <Route element={<Layout />}>
