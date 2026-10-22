@@ -4,7 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { App } from './App';
 import { GlobalStyle } from './GlobalStyle';
 
-// Точка входу монтує React-застосунок у DOM та підключає роутинг.
+// Монтує застосунок у єдиний React-root: StrictMode допомагає виявляти
+// небезпечні побічні ефекти, BrowserRouter надає маршрути, а GlobalStyle — базову тему.
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
