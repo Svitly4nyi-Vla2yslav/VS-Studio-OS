@@ -16,11 +16,19 @@ import { Client, ClientMessage, ClientNote } from './types';
 // clientsCollection є централізованим посиланням на CRM-колекцію clients у Firestore.
 const clientsCollection = collection(db, 'clients');
 
-// createId створює локальний ідентифікатор для нотаток і ручних повідомлень.
+/**
+ * Створює локальний ідентифікатор для вкладених нотаток і повідомлень.
+ *
+ * @returns UUID браузера або часовий fallback, якщо randomUUID недоступний.
+ */
 const createId = () => crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`;
 
-// getClients отримує всі CRM-картки з Firestore.
-// Функція не отримує параметрів і повертає масив Client, відсортований за датою створення.
+/**
+ * Отримує всі CRM-картки з Firestore, починаючи з найновіших.
+ *
+ * @returns Масив Client з id відповідного документа.
+ * @sideEffects Виконує читання колекції clients у Firestore.
+ */
 export const getClients = async (): Promise<Client[]> => {
   const clientsQuery = query(clientsCollection, orderBy('createdAt', 'desc'));
   const snapshot = await getDocs(clientsQuery);
@@ -31,8 +39,13 @@ export const getClients = async (): Promise<Client[]> => {
   }));
 };
 
-// getClientById отримує одного клієнта за Firestore id.
-// Функція приймає id клієнта і повертає Client або null, якщо документа немає.
+/**
+ * Отримує одного клієнта за ідентифікатором документа.
+ *
+ * @param id — Firestore id клієнта.
+ * @returns Client із доданим id або null, якщо документа немає.
+ * @sideEffects Виконує читання документа clients/{id}.
+ */
 export const getClientById = async (id: string): Promise<Client | null> => {
   const clientRef = doc(db, 'clients', id);
   const clientSnap = await getDoc(clientRef);
@@ -47,8 +60,13 @@ export const getClientById = async (id: string): Promise<Client | null> => {
   };
 };
 
-// createClient створює нову CRM-картку клієнта або ліда.
-// Функція приймає дані без id і дат, додає createdAt/updatedAt та повертає id нового документа.
+/**
+ * Створює CRM-картку та додає однакові createdAt і updatedAt.
+ *
+ * @param data — поля клієнта без id і часових міток.
+ * @returns Ідентифікатор нового документа.
+ * @sideEffects Записує документ у колекцію clients.
+ */
 export const createClient = async (
   data: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>,
 ): Promise<string> => {
@@ -62,8 +80,14 @@ export const createClient = async (
   return docRef.id;
 };
 
-// updateClient оновлює існуючу CRM-картку.
-// Функція приймає id клієнта та часткові дані Client, повертає Promise після запису у Firestore.
+/**
+ * Оновлює вибрані поля CRM-картки та встановлює новий updatedAt.
+ *
+ * @param id — ідентифікатор клієнта.
+ * @param data — часткові поля без id і createdAt.
+ * @returns Promise, який завершується після запису.
+ * @sideEffects Оновлює документ clients/{id}.
+ */
 export const updateClient = async (
   id: string,
   data: Partial<Omit<Client, 'id' | 'createdAt'>>,
@@ -75,15 +99,26 @@ export const updateClient = async (
   });
 };
 
-// deleteClient видаляє CRM-картку клієнта.
-// Функція приймає id клієнта і повертає Promise після видалення документа.
+/**
+ * Видаляє CRM-картку клієнта.
+ *
+ * @param id — ідентифікатор клієнта.
+ * @returns Promise, який завершується після видалення.
+ * @sideEffects Видаляє документ clients/{id}.
+ */
 export const deleteClient = async (id: string): Promise<void> => {
   const clientRef = doc(db, 'clients', id);
   await deleteDoc(clientRef);
 };
 
-// addClientNote додає ручну нотатку до масиву notes клієнта.
-// Функція приймає id клієнта і текст нотатки, повертає створений об'єкт ClientNote.
+/**
+ * Створює ручну нотатку й атомарно додає її до масиву notes.
+ *
+ * @param clientId — ідентифікатор клієнта.
+ * @param note — текст нотатки.
+ * @returns Створену ClientNote з локальним id і часовою міткою.
+ * @sideEffects Оновлює notes та updatedAt у Firestore.
+ */
 export const addClientNote = async (clientId: string, note: string): Promise<ClientNote> => {
   const clientRef = doc(db, 'clients', clientId);
   const newNote: ClientNote = {
@@ -100,8 +135,14 @@ export const addClientNote = async (clientId: string, note: string): Promise<Cli
   return newNote;
 };
 
-// addClientMessage додає ручний запис комунікації до масиву messages клієнта.
-// Функція приймає id клієнта та повідомлення без id/createdAt, повертає створений ClientMessage.
+/**
+ * Створює запис комунікації й атомарно додає його до масиву messages.
+ *
+ * @param clientId — ідентифікатор клієнта.
+ * @param message — повідомлення без id і createdAt.
+ * @returns Створений ClientMessage з локальними службовими полями.
+ * @sideEffects Оновлює messages та updatedAt у Firestore.
+ */
 export const addClientMessage = async (
   clientId: string,
   message: Omit<ClientMessage, 'id' | 'createdAt'>,
@@ -121,8 +162,14 @@ export const addClientMessage = async (
   return newMessage;
 };
 
-// updateClientNextAction оновлює наступну дію для конкретного клієнта.
-// Функція приймає id клієнта і текст nextAction, повертає Promise після оновлення Firestore.
+/**
+ * Замінює наступну дію клієнта та оновлює часову мітку картки.
+ *
+ * @param clientId — ідентифікатор клієнта.
+ * @param nextAction — новий текст наступної дії.
+ * @returns Promise, який завершується після запису.
+ * @sideEffects Оновлює nextAction та updatedAt у Firestore.
+ */
 export const updateClientNextAction = async (
   clientId: string,
   nextAction: string,
