@@ -1,5 +1,11 @@
-// createIncomeEntry готує майбутній запис доходу.
-// Функція приймає суму та опис, але зараз не пише дані у Firestore.
+/**
+ * Формує локальну заглушку запису доходу.
+ *
+ * @param amount — сума доходу.
+ * @param description — опис надходження.
+ * @returns Структуру зі статусом placeholder.
+ * @sideEffects Не записує дані та не виконує податкових розрахунків.
+ */
 export const createIncomeEntry = (amount: number, description: string) => ({
   type: 'income',
   amount,
@@ -7,8 +13,14 @@ export const createIncomeEntry = (amount: number, description: string) => ({
   status: 'placeholder',
 });
 
-// createExpenseEntry готує майбутній запис витрати.
-// Функція приймає суму та категорію, але податкову логіку має перевіряти Steuerberater.
+/**
+ * Формує локальну заглушку запису витрати.
+ *
+ * @param amount — сума витрати.
+ * @param category — категорія витрати.
+ * @returns Структуру зі статусом placeholder.
+ * @sideEffects Не записує дані; податкову класифікацію має перевірити Steuerberater.
+ */
 export const createExpenseEntry = (amount: number, category: string) => ({
   type: 'expense',
   amount,
@@ -16,26 +28,47 @@ export const createExpenseEntry = (amount: number, category: string) => ({
   status: 'placeholder',
 });
 
-// uploadInvoiceDocument готує майбутнє завантаження рахунку або E-Rechnung.
-// Функція приймає назву файлу і повертає структуру для архіву документів.
+/**
+ * Описує майбутнє архівування рахунку або E-Rechnung без завантаження файла.
+ *
+ * @param fileName — назва документа.
+ * @returns Метадані з вимогою вести історію архіву.
+ * @sideEffects Не читає і не передає файл.
+ */
 export const uploadInvoiceDocument = (fileName: string) => ({
   fileName,
   archive: 'document-history-required',
 });
 
-// calculateMonthlyProfit готує базовий розрахунок прибутку за місяць.
-// Функція приймає доходи і витрати, але не є фінальною податковою порадою.
+/**
+ * Обчислює арифметичну різницю між доходом і витратами.
+ *
+ * @param income — сума доходу.
+ * @param expenses — сума витрат.
+ * @returns income мінус expenses без податкових коригувань.
+ */
 export const calculateMonthlyProfit = (income: number, expenses: number) => income - expenses;
 
-// prepareSteuerberaterExport готує майбутній експорт даних для Steuerberater.
-// Функція приймає період і повертає заглушку структури експорту.
+/**
+ * Формує декларативну заглушку експорту для Steuerberater.
+ *
+ * @param period — період майбутнього експорту.
+ * @returns Перелік категорій, які мають увійти до пакета.
+ * @sideEffects Не створює файл і не передає дані.
+ */
 export const prepareSteuerberaterExport = (period: string) => ({
   period,
   includes: ['income', 'expenses', 'documents', 'audit-log'],
 });
 
-// createAuditLogEntry готує запис GoBD-friendly журналу аудиту.
-// Функція приймає дію і id сутності, щоб у майбутньому фіксувати незмінну історію.
+/**
+ * Формує локальну заглушку запису аудиту з поточною ISO-датою.
+ *
+ * @param action — назва зафіксованої дії.
+ * @param entityId — ідентифікатор пов'язаної сутності.
+ * @returns Запис з ознакою immutable.
+ * @sideEffects Читає поточний системний час, але нічого не зберігає.
+ */
 export const createAuditLogEntry = (action: string, entityId: string) => ({
   action,
   entityId,
