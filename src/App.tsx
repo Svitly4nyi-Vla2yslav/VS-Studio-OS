@@ -14,6 +14,7 @@ import { NotFoundPanel, NotFoundText, NotFoundTitle } from './App.styled';
  * Описує дерево маршрутів VS Studio OS усередині спільного `Layout`.
  * Динамічний `:clientId` відкриває конкретного клієнта, `/dashboard` перенаправляє
  * на корінь із replace, а невідомі адреси отримують локальну not-found панель.
+ * Компонент не виконує авторизацію або завантаження даних: це відповідальність сторінок і сервісів.
  */
 export const App = () => (
   <Routes>
@@ -26,7 +27,9 @@ export const App = () => (
       <Route path="/documents" element={<Documents />} />
       <Route path="/finance" element={<Finance />} />
       <Route path="/ai-assistant" element={<AiAssistant />} />
+      {/* Застарілий прямий шлях не додає зайвий запис до історії браузера. */}
       <Route path="/dashboard" element={<Navigate to="/" replace />} />
+      {/* Fallback лишається всередині Layout, тому спільна навігація доступна і для невідомого URL. */}
       <Route
         path="*"
         element={
