@@ -1,6 +1,6 @@
 import { BrandBlock, BrandMeta, BrandName, NavItem, NavList, SidebarShell } from './Sidebar.styled';
 
-// Єдиний список задає підписи й маршрути модулів; кореневий Dashboard потребує точного збігу.
+/** Стала конфігурація зіставляє видимі підписи з маршрутами; кореневий Dashboard потребує точного збігу. */
 const navigationItems = [
   { label: 'Dashboard', to: '/' },
   { label: 'Clients', to: '/clients' },
@@ -12,9 +12,9 @@ const navigationItems = [
 ];
 
 /**
- * Рендерить бренд внутрішньої CRM та NavLink для кожного бізнес-модуля.
- * Маршрути беруться зі сталої конфігурації; `end` для `/` не дозволяє Dashboard
- * лишатися активним на вкладених сторінках.
+ * Без аргументів рендерить бренд внутрішньої CRM та `NavLink` для кожного бізнес-модуля.
+ * `navigationItems` є єдиним джерелом порядку й адрес, а `end` для `/` не дозволяє Dashboard
+ * лишатися активним на вкладених сторінках. Компонент не має стану та побічних ефектів.
  */
 export const Sidebar = () => (
   <SidebarShell>
