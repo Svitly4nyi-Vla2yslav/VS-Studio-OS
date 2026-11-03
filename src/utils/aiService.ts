@@ -1,8 +1,8 @@
 import { AiRecommendation } from './types';
 
 /**
- * Прибирає прості Markdown-маркери жирного тексту та зовнішні пробіли.
- * Приймає відповідь асистента й повертає очищений рядок без зміни іншої розмітки.
+ * Приймає текст відповіді, прибирає лише парні маркери `**...**` і `__...__` та зовнішні пробіли.
+ * Повертає новий рядок; іншу Markdown-розмітку, переноси та вміст не змінює.
  */
 const cleanAssistantText = (text: string) =>
   text
@@ -11,9 +11,9 @@ const cleanAssistantText = (text: string) =>
     .trim();
 
 /**
- * Надсилає інструкцію на внутрішній POST endpoint AI-асистента.
- * Повертає очищену відповідь і назву моделі; за неуспішного HTTP-статусу кидає
- * повідомлення API або резервну помилку, навіть якщо тіло відповіді не є JSON.
+ * Надсилає `instruction` JSON-запитом на внутрішній POST endpoint AI-асистента.
+ * Повертає очищені рядки `answer` і `model`; за неуспішного HTTP-статусу кидає
+ * повідомлення API або резервну помилку. Невалідне JSON-тіло перетворюється на `null`.
  */
 export const requestAiAssistant = async (instruction: string) => {
   const response = await fetch('/api/ai-assistant', {
@@ -90,5 +90,4 @@ export const suggestNextAction = (context: string): AiRecommendation => ({
   createdAt: new Date().toISOString(),
 });
 
-// AI Assistant не повинен напряму читати або писати Firebase з компонентів.
-// Усі майбутні AI-інструменти мають проходити через контрольовані service-функції.
+// Межа модуля: UI не повинен напряму читати або писати Firebase; майбутні AI-дії проходять через service-функції.
