@@ -17,7 +17,12 @@ const emptyTaskForm: Omit<ClientTask, 'id' | 'createdAt' | 'updatedAt'> = {
   clientId: '',
 };
 
-// Сторінка Tasks показує базову задачу систему для CRM-команди.
+/**
+ * Показує CRM-задачі та форму створення нової задачі.
+ *
+ * Клієнти й задачі завантажуються паралельно через сервісний шар. Після
+ * успішного створення форма очищається, а обидва списки перечитуються з Firestore.
+ */
 export const Tasks = () => {
   // tasks зберігає задачі, отримані через taskService.
   const [tasks, setTasks] = useState<ClientTask[]>([]);
@@ -30,7 +35,11 @@ export const Tasks = () => {
   // error зберігає повідомлення, якщо Firestore rules не дозволяють читання або запис.
   const [error, setError] = useState('');
 
-  // loadData отримує задачі та клієнтів через сервісні файли.
+  /**
+   * Одночасно отримує задачі та клієнтів і синхронізує локальний стан сторінки.
+   *
+   * @sideEffects Перемикає loading, очищає/встановлює error і замінює обидва масиви.
+   */
   const loadData = async () => {
     try {
       setLoading(true);
@@ -45,22 +54,32 @@ export const Tasks = () => {
     }
   };
 
+  // Початкове читання виконується один раз після монтування.
   useEffect(() => {
     void loadData();
   }, []);
 
-  // clientsById допомагає швидко показати назву прив'язаного клієнта.
+  /**
+   * Індексує компанії за id для відображення прив’язки без повторних пошуків у масиві.
+   *
+   * @returns Map лише для клієнтів із непорожнім id.
+   */
   const clientsById = useMemo(
     () => new Map(clients.filter((client) => client.id).map((client) => [client.id, client.company])),
     [clients],
   );
 
-  // updateField оновлює одне поле форми задачі.
+  /** Типобезпечно замінює одне поле чернетки, не змінюючи решту значень. */
   const updateField = <T extends keyof typeof formData>(field: T, value: (typeof formData)[T]) => {
     setFormData((current) => ({ ...current, [field]: value }));
   };
 
-  // handleSubmit створює задачу через taskService і перезавантажує список.
+  /**
+   * Скасовує стандартний submit і створює задачу через taskService.
+   *
+   * Порожній clientId перетворюється на undefined; після успіху форма очищається
+   * й дані перечитуються. Помилка запису відображається у UI.
+   */
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
