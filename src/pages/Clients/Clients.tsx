@@ -8,7 +8,13 @@ import { createClient, getClients, updateClient } from '../../utils/clientServic
 import { Client, LeadSource, LeadStatus } from '../../utils/types';
 import { ClientGrid, PageStack, PrimaryAction, StatusText } from './Clients.styled';
 
-// Сторінка Clients є першим реальним MVP-модулем для CRM клієнтів і лідів.
+/**
+ * Завантажує CRM-картки, застосовує локальні фільтри та координує форми
+ * створення й редагування клієнтів.
+ *
+ * Читання і записи делегуються clientService; після успішної мутації компонент
+ * повторно отримує весь список, щоб інтерфейс відповідав Firestore.
+ */
 export const Clients = () => {
   // clients зберігає список клієнтів, отриманий тільки через clientService.
   const [clients, setClients] = useState<Client[]>([]);
@@ -27,7 +33,11 @@ export const Clients = () => {
   // editingClient зберігає клієнта, якого зараз редагують.
   const [editingClient, setEditingClient] = useState<Client | undefined>();
 
-  // loadClients завантажує список клієнтів з Firestore через сервісний шар.
+  /**
+   * Завантажує список клієнтів через сервісний шар.
+   *
+   * @sideEffects Оновлює loading, error і clients; помилку перетворює на текст для UI.
+   */
   const loadClients = async () => {
     try {
       setLoading(true);
@@ -41,11 +51,16 @@ export const Clients = () => {
     }
   };
 
+  // Виконує початкове читання один раз після монтування сторінки.
   useEffect(() => {
     void loadClients();
   }, []);
 
-  // filteredClients застосовує пошук, фільтр статусу і фільтр джерела до локального списку.
+  /**
+   * Фільтрує вже завантажений список за ім’ям, компанією, email, статусом і джерелом.
+   *
+   * @returns Новий масив без зміни вихідних CRM-карток і без додаткових запитів.
+   */
   const filteredClients = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
 
