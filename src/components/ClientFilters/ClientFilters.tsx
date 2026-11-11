@@ -12,7 +12,13 @@ interface ClientFiltersProps {
 
 /**
  * Приймає поточний пошук, статус, джерело та три callback і повертає контрольовану панель фільтрів.
- * Текст передається без перетворення, а значення select звужуються до LeadStatus/LeadSource або 'all';
+ * @param search — текст, який input показує без trim або зміни регістру.
+ * @param status — конкретний LeadStatus або службове значення all.
+ * @param source — конкретний LeadSource або службове значення all.
+ * @param onSearchChange — отримує кожне нове текстове значення.
+ * @param onStatusChange — отримує типізоване значення status-select.
+ * @param onSourceChange — отримує типізоване значення source-select.
+ * Значення select звужуються до LeadStatus/LeadSource або 'all';
  * компонент не фільтрує клієнтів, не зберігає локального стану й не виконує зовнішніх запитів.
  */
 export const ClientFilters = ({
