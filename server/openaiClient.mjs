@@ -9,7 +9,10 @@ const systemPrompt = [
   'When an action is needed, describe the proposed action and any missing data.',
 ].join(' ');
 
-// cleanPlainText приймає текст моделі й повертає очищений plain text без маркерів bold і меж code fence.
+/**
+ * Прибирає парні bold-маркери та межі code fence з відповіді моделі, після чого обрізає краї.
+ * Вміст усередині code fence зберігається як звичайний текст; вхідний рядок не змінюється.
+ */
 const cleanPlainText = (text) =>
   text
     .replace(/\*\*(.*?)\*\*/g, '$1')
@@ -17,7 +20,10 @@ const cleanPlainText = (text) =>
     .replace(/```[\s\S]*?```/g, (match) => match.replace(/```/g, '').trim())
     .trim();
 
-// readResponseText витягує відповідь із output_text або збирає текстові chunks із Responses API; порожній результат лишається порожнім.
+/**
+ * Витягує відповідь із верхнього output_text або послідовно збирає текстові chunks із output.
+ * @returns Очищений plain text; відсутній чи порожній вміст перетворюється на порожній рядок.
+ */
 const readResponseText = (data) => {
   if (typeof data?.output_text === 'string' && data.output_text.trim()) {
     return cleanPlainText(data.output_text);
