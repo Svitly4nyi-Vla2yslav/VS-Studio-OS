@@ -42,8 +42,13 @@ const readResponseText = (data) => {
   return cleanPlainText(chunks.join('\n'));
 };
 
-// createAiAssistantReply приймає інструкцію користувача, перевіряє конфігурацію та виконує один HTTP-запит до Responses API.
-// Повертає очищені answer/model; для невалідного вводу, API-помилки чи порожньої відповіді кидає Error зі statusCode.
+/**
+ * Перевіряє server-side API key та непорожню інструкцію, після чого виконує один запит до Responses API.
+ * @param instruction — довільне значення, яке нормалізується до обрізаного рядка.
+ * @returns Очищені answer і фактично вибрану назву моделі.
+ * @throws Error зі statusCode для відсутньої конфігурації, порожнього вводу, HTTP-помилки або порожньої відповіді.
+ * @sideEffects Виконує зовнішній HTTP-запит; значення API key клієнту не повертається.
+ */
 export const createAiAssistantReply = async (instruction) => {
   const apiKey = process.env.OPENAI_API_KEY;
   const model = process.env.OPENAI_MODEL || 'gpt-5.5';
