@@ -13,9 +13,10 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || '',
 };
 
-// firebaseApp ініціалізує Firebase SDK для всього фронтенд-застосунку.
+// SDK ініціалізується один раз під час імпорту модуля; відсутні env-значення стають порожніми рядками
+// й проявляться як помилка конфігурації Firebase під час фактичного використання, а не як вбудовані секрети.
 export const firebaseApp = initializeApp(firebaseConfig);
 
-// db є єдиним експортом Firestore для сервісних файлів.
-// React-компоненти не повинні напряму працювати з Firestore.
+// db є спільним екземпляром Firestore для сервісних файлів.
+// React-компоненти не повинні напряму працювати з Firestore, щоб межа доступу до даних лишалася централізованою.
 export const db = getFirestore(firebaseApp);
